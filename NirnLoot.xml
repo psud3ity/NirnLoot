@@ -1,0 +1,6 @@
+<GuiXml>
+    <Controls>
+        <TopLevelControl name="NirnLoot">
+        </TopLevelControl>
+    </Controls>
+</GuiXml>
