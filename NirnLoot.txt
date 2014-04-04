@@ -1,0 +1,12 @@
+## Title: NirnLoot
+## APIVersion: 100003
+## Version: 0.2 alpha
+## OptionalDependsOn: LibStub LibAddonMenu-1.0
+## SavedVariables: NirnLoot_settings
+
+
+Libs/LibStub/LibStub.lua
+Libs/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
+
+NirnLoot.lua
+NirnLoot.xml

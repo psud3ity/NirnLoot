@@ -1,6 +1,15 @@
 NL = {}
 local LAM = LibStub("LibAddonMenu-1.0")
+local bagIDvar = 1 -- WTF is bagId?
 local db
+
+SmithList = nil
+ClothList = nil
+EnchantList = nil
+ProvList = nil
+WoodList = nil
+AlchemyList = nil
+
 local defaults = {
 
 	ITEM_QUALITY_ARCANE = "keep",
@@ -38,9 +47,57 @@ local function sendDebug(message)
 end
 
 function ListBag()
-	sendDebug("Hello World")
-	local bagSize = GetMaxBags()
-	sendDebug("BagSize is " .. bagSize)
+	local bagIcon, bagSlots = GetBagInfo(BAG_BACKPACK)
+	for counter = 0, bagSlots,1 do
+		sendDebug("NEW ITEM  - Number " .. counter .. " of " .. bagSlots )
+	sortLoot(bagIDvar, counter)
+	end
+	sendDebug("BagSize is " .. bagSlots)
+	sendDebug(BAG_BACKPACK)
+	
+end
+
+function sortLoot(bagId, slotId)
+	local icon, stack, sellPrice, meetsUsageRequirement, locked, equipType, itemStyle, quality = GetItemInfo(bagId, slotId)
+	local usedInCraftingType, itemType, extraInfo1, extraInfo2, extraInfo3 = GetItemCraftingInfo(bagId, slotId)
+	local itemName = GetItemName(bagId, slotId)
+	sendDebug("ItemName : ".. itemName)
+	if(equipType>0) then
+		sendDebug("EquipType : " .. equipType)
+	end
+--	sendDebug("Quality : " .. quality)
+--	sendDebug("Stack : " .. stack)
+--	sendDebug("Crafting Type : " .. usedInCraftingType)
+		if(usedInCraftingType==1) then
+			addToSendList(slotId, SmithList)
+		elseif(usedInCraftingType==2) then
+			addToSendList(slotId, ClothList)
+		elseif(usedInCraftingType==3) then
+			addToSendList(slotId, EnchantList)
+		elseif(usedInCraftingType==4) then
+			addToSendList(slotId, AlchemyList)
+		elseif(usedInCraftingType==5) then
+			addToSendList(slotId, ProvList)
+		elseif(usedInCraftingType==6) then
+			addToSendList(slotId, WoodList)
+		else
+			sendDebug("Item not crafting material")
+		end
+end
+
+function addToSendList(slotId, list)
+	list = {next = list, value = slotId}
+	sendDebug("Added Item to list - " .. list.value)
+end
+
+function showList(list)
+	sendDebug("Printing list")
+	sendDebug(list)
+	  while list do
+	  sendDebug("WTF")
+      sendDebug(list.value)
+      list = list.next
+	end
 end
 
 SLASH_COMMANDS["/nirnloot"] = function()
@@ -48,6 +105,9 @@ SLASH_COMMANDS["/nirnloot"] = function()
    ListBag()
 end
 
+SLASH_COMMANDS["/cloth"] = function()
+	showList(ClothList)
+end
 EVENT_MANAGER:RegisterForEvent("NirnLoot", EVENT_ADD_ON_LOADED, function(event, addon)
 
 
